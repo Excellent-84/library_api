@@ -1,12 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
 
+from app.users.routes import users_router
+
 app = FastAPI(title="Library API")
 
-
-@app.get("/")
-def root():
-    return {"message": "Welcome to the Library API!"}
+app.include_router(users_router)
 
 
 if __name__ == "__main__":
