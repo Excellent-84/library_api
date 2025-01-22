@@ -11,15 +11,21 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    role: str = "reader"
 
 
 class UserResponse(UserBase):
     id: int
     is_active: bool
-    is_admin: bool
+    role: str
 
     class Config:
         from_attributes = True
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
 
 
 class Token(BaseModel):
@@ -29,3 +35,7 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+class RoleUpdate(BaseModel):
+    new_role: str
