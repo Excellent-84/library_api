@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func
 
 from ..database import Base
+from .enums import UserRole
 
 
 class BaseModel(Base):
@@ -23,4 +24,4 @@ class User(BaseModel):
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(default=True)
-    role: Mapped[str] = mapped_column(default="reader")
+    role: Mapped[str] = mapped_column(default=UserRole.READER.value)

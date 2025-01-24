@@ -3,16 +3,20 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from ..database import get_async_session
+from .enums import UserRole
 from .exceptions import (
-    LoginException, UserExistsException, UserNotFoundException
+    LoginException,
+    UserExistsException,
+    UserNotFoundException,
 )
 from .models import User
-from .schemas import (
-    LoginRequest, RoleUpdate, Token, UserBase, UserCreate, UserResponse
-)
+from .schemas import LoginRequest, RoleUpdate, Token, UserCreate, UserResponse
 from .security import create_access_token
 from .services import (
-    authenticate_user, create_user, get_current_user, require_role
+    authenticate_user,
+    create_user,
+    get_current_user,
+    require_role,
 )
 
 users_router = APIRouter(prefix="/users", tags=["Users"])
@@ -22,9 +26,7 @@ users_router = APIRouter(prefix="/users", tags=["Users"])
 async def register(
     user: UserCreate, db: AsyncSession = Depends(get_async_session)
 ):
-    existing_user = await authenticate_user(db, user.username, user.password)
-
-    if existing_user:
+    if await db.scalar(select(User).filter(User.username == user.username)):
         raise UserExistsException
 
     return await create_user(db, user.username, user.email, user.password)
@@ -40,19 +42,19 @@ async def login(
         raise LoginException
 
     access_token = create_access_token(data={"sub": user.username})
-    return {"access_token": access_token}
+    return {"access_token": access_token, "token_type": "bearer"}
 
 
-@users_router.get("/me")
-async def user_profile(current_user: UserResponse = Depends(get_current_user)):
+@users_router.get("/me", response_model=UserResponse)
+async def get_me(current_user: UserResponse = Depends(get_current_user)):
     return current_user
 
 
 @users_router.put("/me/update", response_model=UserResponse)
-async def update_profile(
-    user_update: UserBase,
+async def update_me(
+    user_update: UserCreate,
     db: AsyncSession = Depends(get_async_session),
-    current_user=Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     current_user.username = user_update.username
     current_user.email = user_update.email
@@ -65,23 +67,20 @@ async def update_profile(
 @users_router.get("/", response_model=list[UserResponse])
 async def list_users(
     db: AsyncSession = Depends(get_async_session),
-    current_user=Depends(require_role("admin"))
+    current_user=Depends(require_role(UserRole.ADMIN)),
 ):
-    query = select(User)
-    result = await db.execute(query)
-    return result.scalars().all()
+    result = await db.execute(select(User))
+    return result.scalars().all() or []
 
 
-@users_router.put("/{user_id}/role", status_code=200)
+@users_router.put("/{user_id}/role", response_model=dict)
 async def update_role(
     user_id: int,
     role_update: RoleUpdate,
     db: AsyncSession = Depends(get_async_session),
-    current_user=Depends(require_role("admin"))
+    current_user=Depends(require_role(UserRole.ADMIN)),
 ):
-    query = select(User).filter(User.id == user_id)
-    result = await db.execute(query)
-    user = result.scalar_one_or_none()
+    user = await db.scalar(select(User).filter(User.id == user_id))
 
     if not user:
         raise UserNotFoundException

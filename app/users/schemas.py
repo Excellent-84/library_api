@@ -3,6 +3,8 @@ from typing import Annotated
 from annotated_types import MaxLen, MinLen
 from pydantic import BaseModel, EmailStr
 
+from .enums import UserRole
+
 
 class UserBase(BaseModel):
     username: Annotated[str, MinLen(3), MaxLen(20)]
@@ -11,7 +13,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
-    role: str = "reader"
+    role: str = UserRole.READER.value
 
 
 class UserResponse(UserBase):

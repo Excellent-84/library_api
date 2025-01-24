@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from ..database import get_async_session, settings
+from .enums import UserRole
 from .exceptions import CredentialsException, PermissionException
 from .models import User
 from .schemas import TokenData, UserResponse
@@ -18,18 +19,18 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/users/login")
 async def create_user(
     db: AsyncSession, username: str, email: str, password: str
 ) -> User:
-    query = select(User)
-    result = await db.execute(query)
-    users = result.scalars().all()
-
-    role = "admin" if not users else "reader"
+    role = (
+        UserRole.ADMIN.value
+        if not (await db.scalar(select(User.id).limit(1)))
+        else UserRole.READER.value
+    )
 
     hashed_password = get_password_hash(password)
     new_user = User(
         username=username,
         email=email,
         hashed_password=hashed_password,
-        role=role
+        role=role,
     )
     db.add(new_user)
     await db.commit()
@@ -61,7 +62,7 @@ async def get_current_user(
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
-        username: str | None = payload.get("sub")
+        username: str = payload.get("sub")
         if username is None:
             raise CredentialsException
         token_data = TokenData(username=username)
