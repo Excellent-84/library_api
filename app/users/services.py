@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
+from sqlalchemy import asc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -77,6 +78,11 @@ async def login_user(data: LoginRequest, db: AsyncSession) -> Token:
 
     access_token = create_access_token(data={"sub": user.email})
     return Token(access_token=access_token)
+
+
+async def get_all_users(db: AsyncSession) -> list[UserResponse]:
+    result = await db.execute(select(User).order_by(asc(User.id)))
+    return result.scalars().all()
 
 
 async def get_current_user(

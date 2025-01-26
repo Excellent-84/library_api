@@ -1,22 +1,24 @@
 from datetime import date
-from typing import Optional
+from typing import Annotated, Optional
 
+from annotated_types import MaxLen, MinLen
 from pydantic import BaseModel
 
 
 class AuthorBase(BaseModel):
-    name: str
+    name: Annotated[str, MinLen(3), MaxLen(50)]
     birth_date: date
+    biography: Optional[Annotated[str, MaxLen(1000)]] = None
 
 
 class AuthorCreate(AuthorBase):
-    biography: Optional[str] = None
+    pass
 
 
 class AuthorUpdate(BaseModel):
-    name: Optional[str]
-    biography: Optional[str]
-    birth_date: Optional[date]
+    name: Optional[Annotated[str, MinLen(3), MaxLen(50)]] = None
+    birth_date: Optional[date] = None
+    biography: Optional[Annotated[str, MaxLen(1000)]] = None
 
 
 class AuthorRead(AuthorBase):

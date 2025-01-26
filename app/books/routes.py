@@ -26,7 +26,7 @@ async def get_book(
 
 
 @books_router.put("/{book_id}", response_model=BookResponse)
-async def edit_book(
+async def update(
     book_id: int,
     book: BookCreate,
     db: AsyncSession = Depends(get_async_session),
@@ -36,7 +36,7 @@ async def edit_book(
 
 
 @books_router.delete("/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def remove_book(
+async def delete(
     book_id: int,
     db: AsyncSession = Depends(get_async_session),
     current_user=Depends(require_role(UserRole.ADMIN)),

@@ -25,5 +25,8 @@ class Book(BaseModel):
     )
 
     authors = relationship(
-        "Author", secondary=book_author, back_populates="books"
+        "Author",
+        secondary=book_author,
+        back_populates="books",
+        lazy="selectin"
     )

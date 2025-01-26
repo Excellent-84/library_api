@@ -1,13 +1,16 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 
 from ..database import get_async_session
 from ..users import UserRole, require_role
-from .models import Author
 from .schemas import AuthorCreate, AuthorRead, AuthorUpdate
-from .services import author_create, get_author_by_id
-from .utils import update_instance
+from .services import (
+    author_create,
+    delete_author,
+    get_all_authors,
+    get_author_by_id,
+    update_author
+)
 
 authors_router = APIRouter(prefix="/authors", tags=["Authors"])
 
@@ -25,8 +28,7 @@ async def create_author(
 async def get_authors(
     db: AsyncSession = Depends(get_async_session),
 ):
-    result = await db.execute(select(Author))
-    return result.scalars().all()
+    return await get_all_authors(db)
 
 
 @authors_router.get("/{author_id}", response_model=AuthorRead)
@@ -37,27 +39,19 @@ async def get_author(
 
 
 @authors_router.put("/{author_id}", response_model=AuthorRead)
-async def update_author(
+async def update(
     author_id: int,
     author_update: AuthorUpdate,
     db: AsyncSession = Depends(get_async_session),
     current_user=Depends(require_role(UserRole.ADMIN)),
 ):
-    author = await get_author_by_id(author_id, db)
-    update_instance(author, author_update.model_dump(exclude_unset=True))
-
-    db.add(author)
-    await db.commit()
-    await db.refresh(author)
-    return author
+    return await update_author(author_id, author_update, db)
 
 
 @authors_router.delete("/{author_id}", status_code=204)
-async def delete_author(
+async def delete(
     author_id: int,
     db: AsyncSession = Depends(get_async_session),
     current_user=Depends(require_role(UserRole.ADMIN)),
 ):
-    author = await get_author_by_id(author_id, db)
-    await db.delete(author)
-    await db.commit()
+    await delete_author(author_id, db)

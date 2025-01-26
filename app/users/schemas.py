@@ -17,8 +17,8 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(BaseModel):
-    username: Optional[str] = None
-    password: Optional[str] = None
+    username: Optional[Annotated[str, MinLen(3), MaxLen(20)]] = None
+    password: Optional[Annotated[str, MinLen(8), MaxLen(16)]] = None
 
 
 class UserResponse(UserBase):

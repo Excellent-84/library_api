@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
 
 from ..database import get_async_session
 from .enums import UserRole
@@ -15,6 +14,7 @@ from .schemas import (
 )
 from .services import (
     create_user,
+    get_all_users,
     get_current_user,
     login_user,
     require_role,
@@ -44,8 +44,7 @@ async def list_users(
     db: AsyncSession = Depends(get_async_session),
     current_user=Depends(require_role(UserRole.ADMIN)),
 ):
-    result = await db.execute(select(User))
-    return result.scalars().all() or []
+    return await get_all_users(db)
 
 
 @users_router.get("/me", response_model=UserResponse)
@@ -53,7 +52,7 @@ async def get_me(current_user: UserResponse = Depends(get_current_user)):
     return current_user
 
 
-@users_router.put("/me/update", response_model=UserResponse)
+@users_router.put("/me", response_model=UserResponse)
 async def update_me(
     user_update: UserUpdate,
     db: AsyncSession = Depends(get_async_session),

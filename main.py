@@ -3,6 +3,7 @@ from fastapi import FastAPI
 
 from app.authors import authors_router
 from app.books import books_router
+from app.rebooks import rebooks_router
 from app.users import users_router
 
 app = FastAPI(title="Library API")
@@ -10,6 +11,7 @@ app = FastAPI(title="Library API")
 app.include_router(users_router)
 app.include_router(authors_router)
 app.include_router(books_router)
+app.include_router(rebooks_router)
 
 
 if __name__ == "__main__":
