@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from annotated_types import MaxLen, MinLen
 from pydantic import BaseModel, EmailStr
@@ -7,17 +7,23 @@ from .enums import UserRole
 
 
 class UserBase(BaseModel):
-    username: Annotated[str, MinLen(3), MaxLen(20)]
     email: EmailStr
 
 
 class UserCreate(UserBase):
-    password: str
+    username: Annotated[str, MinLen(3), MaxLen(20)]
+    password: Annotated[str, MinLen(8), MaxLen(16)]
     role: str = UserRole.READER.value
+
+
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    password: Optional[str] = None
 
 
 class UserResponse(UserBase):
     id: int
+    username: str
     is_active: bool
     role: str
 
@@ -26,17 +32,13 @@ class UserResponse(UserBase):
 
 
 class LoginRequest(BaseModel):
-    username: str
-    password: str
+    email: EmailStr
+    password: Annotated[str, MinLen(8), MaxLen(16)]
 
 
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
-
-
-class TokenData(BaseModel):
-    username: str | None = None
 
 
 class RoleUpdate(BaseModel):

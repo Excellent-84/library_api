@@ -2,11 +2,10 @@ from fastapi import HTTPException, status
 
 
 class CustomException(HTTPException):
-    def __init__(
-        self, status_code: int, detail: str, headers: dict | None = None
-    ):
+    def __init__(self):
         super().__init__(
-            status_code=status_code, detail=detail, headers=headers
+            status_code=self.status_code,
+            detail=self.detail
         )
 
 
@@ -18,7 +17,7 @@ class LoginException(CustomException):
 
 class UserExistsException(CustomException):
     status_code = status.HTTP_400_BAD_REQUEST
-    detail = "User with this username or email already exists"
+    detail = "User with this email already exists"
 
 
 class CredentialsException(CustomException):

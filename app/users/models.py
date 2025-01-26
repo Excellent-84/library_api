@@ -20,7 +20,7 @@ class BaseModel(Base):
 class User(BaseModel):
     __tablename__ = "users"
 
-    username: Mapped[str] = mapped_column(unique=True, nullable=False)
+    username: Mapped[str] = mapped_column(nullable=False)
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     hashed_password: Mapped[str] = mapped_column(nullable=False)
     is_active: Mapped[bool] = mapped_column(default=True)
