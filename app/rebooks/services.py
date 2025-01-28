@@ -1,7 +1,5 @@
-from datetime import datetime, timezone
-
 from fastapi import HTTPException
-from sqlalchemy import func
+from sqlalchemy import asc, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -19,8 +17,9 @@ async def borrow_book(db: AsyncSession, user_id: int, book_id: int) -> Rebook:
         raise HTTPException(status_code=400, detail="No copies available")
 
     user_rebooks_count = await db.scalar(
-        select(func.count(Rebook.id))
-        .filter(Rebook.user_id == user_id, Rebook.returned_at.is_(None))
+        select(func.count(Rebook.id)).filter(
+            Rebook.user_id == user_id, Rebook.returned_at.is_(None)
+        )
     )
     if user_rebooks_count >= 5:
         raise HTTPException(
@@ -42,13 +41,14 @@ async def return_book(db: AsyncSession, user_id: int, book_id: int) -> Rebook:
         select(Rebook).filter(
             Rebook.user_id == user_id,
             Rebook.book_id == book_id,
-            Rebook.returned_at is None,
+            Rebook.returned_at.is_(None),
         )
     )
+
     if not rebook:
         raise HTTPException(status_code=404, detail="Rebook record not found")
 
-    rebook.returned_at = datetime.now(timezone.utc)
+    rebook.returned_at = func.now()
     book = await db.scalar(select(Book).filter(Book.id == book_id))
     book.available_copies += 1
 
@@ -57,3 +57,8 @@ async def return_book(db: AsyncSession, user_id: int, book_id: int) -> Rebook:
     await db.commit()
     await db.refresh(rebook)
     return rebook
+
+
+async def get_all_rebooks(db: AsyncSession) -> list[Rebook]:
+    result = await db.execute(select(Rebook).order_by(asc(Rebook.id)))
+    return result.scalars().all()

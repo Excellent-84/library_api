@@ -5,11 +5,6 @@ from pydantic import BaseModel
 
 class RebookBase(BaseModel):
     book_id: int
-    user_id: int
-
-
-class RebookCreate(RebookBase):
-    pass
 
 
 class RebookResponse(RebookBase):
@@ -17,6 +12,7 @@ class RebookResponse(RebookBase):
     borrowed_at: datetime
     due_date: datetime
     returned_at: datetime | None
+    user_id: int
 
     class Config:
         from_attributes = True

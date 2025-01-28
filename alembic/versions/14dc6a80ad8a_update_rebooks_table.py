@@ -1,8 +1,8 @@
-"""Add lazy load
+"""Update rebooks table
 
-Revision ID: e8b80bb0c211
+Revision ID: 14dc6a80ad8a
 Revises: 1885bd609977
-Create Date: 2025-01-27 00:51:59.301745
+Create Date: 2025-01-28 05:04:51.121043
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "e8b80bb0c211"
+revision: str = "14dc6a80ad8a"
 down_revision: Union[str, None] = "1885bd609977"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

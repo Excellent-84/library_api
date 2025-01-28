@@ -1,6 +1,6 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..books import Book
@@ -17,10 +17,10 @@ class Rebook(BaseModel):
         ForeignKey("books.id"), nullable=False
     )
     borrowed_at: Mapped[datetime] = mapped_column(
-        default=lambda: datetime.now(timezone.utc)
+        default=func.now(), server_default=func.now(), nullable=False
     )
     due_date: Mapped[datetime] = mapped_column(
-        default=lambda: datetime.now(timezone.utc) + timedelta(days=14)
+        default=func.now() + timedelta(days=14), nullable=False
     )
     returned_at: Mapped[datetime] = mapped_column(nullable=True)
 
