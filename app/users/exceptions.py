@@ -3,10 +3,7 @@ from fastapi import HTTPException, status
 
 class CustomException(HTTPException):
     def __init__(self):
-        super().__init__(
-            status_code=self.status_code,
-            detail=self.detail
-        )
+        super().__init__(status_code=self.status_code, detail=self.detail)
 
 
 class LoginException(CustomException):

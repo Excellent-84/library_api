@@ -4,7 +4,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..database import get_async_session
 from ..users import UserRole, get_current_user, require_role
 from .schemas import RebookBase, RebookResponse
-from .services import borrow_book, get_all_rebooks, return_book
+from .services import (
+    borrow_book,
+    get_all_rebooks,
+    get_rebook_by_id,
+    return_book,
+)
 
 rebooks_router = APIRouter(prefix="/rebooks", tags=["Rebooks"])
 
@@ -32,5 +37,13 @@ async def list_rebooks(
     db: AsyncSession = Depends(get_async_session),
     current_user=Depends(require_role(UserRole.ADMIN)),
 ):
-
     return await get_all_rebooks(db)
+
+
+@rebooks_router.get("/{rebook_id}", response_model=RebookResponse)
+async def get_rebook(
+    rebook_id: int,
+    db: AsyncSession = Depends(get_async_session),
+    current_user=Depends(get_current_user),
+):
+    return await get_rebook_by_id(rebook_id, db)

@@ -6,6 +6,7 @@ from jose import JWTError, jwt
 from sqlalchemy import asc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy.orm import joinedload
 
 from ..database import get_async_session, settings
 from .enums import UserRole
@@ -22,6 +23,7 @@ from .schemas import (
     RoleUpdate,
     Token,
     UserCreate,
+    UserRebookResponse,
     UserResponse,
     UserUpdate,
 )
@@ -80,6 +82,23 @@ async def login_user(data: LoginRequest, db: AsyncSession) -> Token:
     return Token(access_token=access_token)
 
 
+async def get_user_by_id(user_id: int, db: AsyncSession) -> UserRebookResponse:
+    query = (
+        select(User)
+        .options(joinedload(User.rebooks))
+        .filter(User.id == user_id)
+    )
+    result = await db.execute(query)
+    user = result.unique().scalar_one_or_none()
+
+    if not user:
+        raise UserNotFoundException
+
+    user_response = UserRebookResponse.model_validate(user)
+    user_response.set_rebooks(user.rebooks)
+    return user_response
+
+
 async def get_all_users(db: AsyncSession) -> list[UserResponse]:
     result = await db.execute(select(User).order_by(asc(User.id)))
     return result.scalars().all()
@@ -88,7 +107,7 @@ async def get_all_users(db: AsyncSession) -> list[UserResponse]:
 async def get_current_user(
     token: Annotated[str, Depends(oauth2_scheme)],
     db: AsyncSession = Depends(get_async_session),
-) -> UserResponse:
+) -> User:
     try:
         payload = jwt.decode(
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]

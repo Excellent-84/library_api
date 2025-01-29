@@ -9,6 +9,7 @@ from .schemas import (
     RoleUpdate,
     Token,
     UserCreate,
+    UserRebookResponse,
     UserResponse,
     UserUpdate,
 )
@@ -16,6 +17,7 @@ from .services import (
     create_user,
     get_all_users,
     get_current_user,
+    get_user_by_id,
     login_user,
     require_role,
     update_current_user,
@@ -47,9 +49,12 @@ async def list_users(
     return await get_all_users(db)
 
 
-@users_router.get("/me", response_model=UserResponse)
-async def get_me(current_user: UserResponse = Depends(get_current_user)):
-    return current_user
+@users_router.get("/me", response_model=UserRebookResponse)
+async def get_me(
+    db: AsyncSession = Depends(get_async_session),
+    current_user: UserRebookResponse = Depends(get_current_user),
+):
+    return await get_user_by_id(current_user.id, db)
 
 
 @users_router.put("/me", response_model=UserResponse)
@@ -59,6 +64,15 @@ async def update_me(
     current_user: User = Depends(get_current_user),
 ):
     return await update_current_user(user_update, db, current_user)
+
+
+@users_router.get("/{user_id}", response_model=UserRebookResponse)
+async def get_user(
+    user_id: int,
+    db: AsyncSession = Depends(get_async_session),
+    current_user=Depends(require_role(UserRole.ADMIN)),
+):
+    return await get_user_by_id(user_id, db)
 
 
 @users_router.put("/{user_id}/role", response_model=dict)

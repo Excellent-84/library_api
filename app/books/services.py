@@ -22,7 +22,7 @@ async def create_book(book_data: BookCreate, db: AsyncSession) -> Book:
         publication_date=book_data.publication_date,
         genre=book_data.genre,
         available_copies=book_data.available_copies,
-        authors=authors,
+        authors=authors
     )
 
     db.add(new_book)
@@ -33,8 +33,10 @@ async def create_book(book_data: BookCreate, db: AsyncSession) -> Book:
 
 async def get_book_by_id(book_id: int, db: AsyncSession) -> Book:
     book = await db.scalar(select(Book).filter(Book.id == book_id))
+
     if not book:
         raise BookNotFoundException
+
     return book
 
 

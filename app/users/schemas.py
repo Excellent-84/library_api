@@ -31,6 +31,18 @@ class UserResponse(UserBase):
         from_attributes = True
 
 
+class UserRebookResponse(UserResponse):
+    rebooks: Optional[list] = None
+
+    class Config:
+        from_attributes = True
+
+    def set_rebooks(self, rebooks_data):
+        from ..rebooks import RebookResponse
+
+        self.rebooks = [RebookResponse.model_validate(r) for r in rebooks_data]
+
+
 class LoginRequest(BaseModel):
     email: EmailStr
     password: Annotated[str, MinLen(8), MaxLen(16)]

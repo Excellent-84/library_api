@@ -11,5 +11,5 @@ __all__ = [
     "UserRole",
     "get_current_user",
     "require_role",
-    "users_router"
+    "users_router",
 ]
