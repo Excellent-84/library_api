@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     DB_PASS: str
     DB_NAME: str
 
+    MODE: str
+
     @property
     def async_database_url(self):
         return (

@@ -28,5 +28,5 @@ class Book(BaseModel):
         "Author",
         secondary=book_author,
         back_populates="books",
-        lazy="selectin"
+        lazy="selectin",
     )

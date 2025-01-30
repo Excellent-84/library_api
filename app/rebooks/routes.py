@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_async_session
@@ -33,11 +33,16 @@ async def return_rebook(
 
 
 @rebooks_router.get("/", response_model=list[RebookResponse])
-async def list_rebooks(
+async def get_rebooks(
+    limit: int = Query(default=10, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    user_id: int | None = Query(default=None),
     db: AsyncSession = Depends(get_async_session),
     current_user=Depends(require_role(UserRole.ADMIN)),
 ):
-    return await get_all_rebooks(db)
+    return await get_all_rebooks(
+        db=db, limit=limit, offset=offset, user_id=user_id
+    )
 
 
 @rebooks_router.get("/{rebook_id}", response_model=RebookResponse)

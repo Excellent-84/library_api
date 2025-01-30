@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_async_session
@@ -9,7 +9,7 @@ from .services import (
     delete_author,
     get_all_authors,
     get_author_by_id,
-    update_author
+    update_author,
 )
 
 authors_router = APIRouter(prefix="/authors", tags=["Authors"])
@@ -24,11 +24,21 @@ async def create_author(
     return await author_create(author, db)
 
 
+# @authors_router.get("/", response_model=list[AuthorRead])
+# async def get_authors(
+#     db: AsyncSession = Depends(get_async_session),
+# ):
+#     return await get_all_authors(db)
+
+
 @authors_router.get("/", response_model=list[AuthorRead])
 async def get_authors(
     db: AsyncSession = Depends(get_async_session),
+    limit: int = Query(10, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    name: str | None = Query(None, min_length=3, max_length=50),
 ):
-    return await get_all_authors(db)
+    return await get_all_authors(db, limit=limit, offset=offset, name=name)
 
 
 @authors_router.get("/{author_id}", response_model=AuthorRead)

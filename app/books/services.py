@@ -1,3 +1,4 @@
+from sqlalchemy import asc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -22,7 +23,7 @@ async def create_book(book_data: BookCreate, db: AsyncSession) -> Book:
         publication_date=book_data.publication_date,
         genre=book_data.genre,
         available_copies=book_data.available_copies,
-        authors=authors
+        authors=authors,
     )
 
     db.add(new_book)
@@ -38,6 +39,21 @@ async def get_book_by_id(book_id: int, db: AsyncSession) -> Book:
         raise BookNotFoundException
 
     return book
+
+
+async def get_all_books(
+    db: AsyncSession,
+    limit: int = 10,
+    offset: int = 0,
+    genre: str | None = None,
+) -> list[Book]:
+    query = select(Book).order_by(asc(Book.id))
+    if genre:
+        query = query.filter(Book.genre.ilike(f"%{genre}%"))
+
+    query = query.limit(limit).offset(offset)
+    result = await db.execute(query)
+    return result.scalars().all()
 
 
 async def update_book(

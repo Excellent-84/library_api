@@ -6,9 +6,9 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
+from app import Author, Book, Rebook, User  # noqa
 from app.config import settings
 from app.database import Base
-from app import Author, Book, Rebook, User  # noqa
 
 config = context.config
 

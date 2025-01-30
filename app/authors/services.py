@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy import asc
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,7 +26,7 @@ async def author_create(author_data: AuthorCreate, db: AsyncSession) -> Author:
 
 async def get_author_by_id(author_id: int, db: AsyncSession) -> Author:
     result = await db.execute(select(Author).filter(Author.id == author_id))
-    author = result.scalar_one_or_none()
+    author = result.scalars().first()
 
     if not author:
         raise AuthorNotFoundException
@@ -32,8 +34,18 @@ async def get_author_by_id(author_id: int, db: AsyncSession) -> Author:
     return author
 
 
-async def get_all_authors(db: AsyncSession) -> list[Author]:
-    result = await db.execute(select(Author).order_by(asc(Author.id)))
+async def get_all_authors(
+    db: AsyncSession,
+    limit: int = 10,
+    offset: int = 0,
+    name: Optional[str] = None,
+) -> list[Author]:
+    query = select(Author).order_by(asc(Author.id))
+    if name:
+        query = query.filter(Author.name.ilike(f"%{name}%"))
+
+    query = query.limit(limit).offset(offset)
+    result = await db.execute(query)
     return result.scalars().all()
 
 

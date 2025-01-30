@@ -68,6 +68,16 @@ async def return_book(db: AsyncSession, user_id: int, book_id: int) -> Rebook:
     return rebook
 
 
-async def get_all_rebooks(db: AsyncSession) -> list[Rebook]:
-    result = await db.execute(select(Rebook).order_by(asc(Rebook.id)))
+async def get_all_rebooks(
+    db: AsyncSession,
+    limit: int = 10,
+    offset: int = 0,
+    user_id: int | None = None,
+) -> list[Rebook]:
+    query = select(Rebook).order_by(asc(Rebook.id))
+    if user_id:
+        query = query.filter(Rebook.user_id == user_id)
+
+    query = query.limit(limit).offset(offset)
+    result = await db.execute(query)
     return result.scalars().all()
