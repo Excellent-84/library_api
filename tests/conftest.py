@@ -29,7 +29,6 @@ app.dependency_overrides[get_async_session] = override_get_async_session
 
 @pytest.fixture(autouse=True, scope="session")
 async def prepare_database():
-    print(f"settings.MODE = {settings.MODE}")
     assert settings.MODE == "TEST"
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
