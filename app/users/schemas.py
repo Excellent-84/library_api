@@ -1,7 +1,7 @@
 from typing import Annotated, Optional
 
 from annotated_types import MaxLen, MinLen
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 from .enums import UserRole
 
@@ -27,15 +27,13 @@ class UserResponse(UserBase):
     is_active: bool
     role: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserRebookResponse(UserResponse):
     rebooks: Optional[list] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
     def set_rebooks(self, rebooks_data):
         from ..rebooks import RebookResponse

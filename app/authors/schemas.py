@@ -2,7 +2,7 @@ from datetime import date
 from typing import Annotated, Optional
 
 from annotated_types import MaxLen, MinLen
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class AuthorBase(BaseModel):
@@ -24,5 +24,4 @@ class AuthorUpdate(BaseModel):
 class AuthorRead(AuthorBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

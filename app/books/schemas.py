@@ -2,7 +2,7 @@ from datetime import date
 from typing import Annotated, List, Optional
 
 from annotated_types import MaxLen, MinLen
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class BookBase(BaseModel):
@@ -21,9 +21,8 @@ class BookResponse(BookBase):
     id: int
     authors: List[str]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
-    @validator("authors", pre=True, always=True)
+    @field_validator("authors", mode="before")
     def convert_authors(cls, value):  # noqa
         return [author.name for author in value]

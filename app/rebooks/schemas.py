@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class RebookBase(BaseModel):
@@ -14,5 +14,4 @@ class RebookResponse(RebookBase):
     returned_at: datetime | None
     user_id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
