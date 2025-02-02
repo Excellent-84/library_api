@@ -24,13 +24,6 @@ async def create_author(
     return await author_create(author, db)
 
 
-# @authors_router.get("/", response_model=list[AuthorRead])
-# async def get_authors(
-#     db: AsyncSession = Depends(get_async_session),
-# ):
-#     return await get_all_authors(db)
-
-
 @authors_router.get("/", response_model=list[AuthorRead])
 async def get_authors(
     db: AsyncSession = Depends(get_async_session),

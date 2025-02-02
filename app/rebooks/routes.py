@@ -49,6 +49,6 @@ async def get_rebooks(
 async def get_rebook(
     rebook_id: int,
     db: AsyncSession = Depends(get_async_session),
-    current_user=Depends(get_current_user),
+    current_user=Depends(require_role(UserRole.ADMIN)),
 ):
     return await get_rebook_by_id(rebook_id, db)

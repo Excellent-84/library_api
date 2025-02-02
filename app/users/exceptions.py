@@ -25,7 +25,7 @@ class CredentialsException(CustomException):
 
 class PermissionException(CustomException):
     status_code = status.HTTP_403_FORBIDDEN
-    detail = "You do not have the necessary permissions"
+    detail = "Permission denied"
 
 
 class UserNotFoundException(CustomException):
