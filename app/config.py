@@ -4,16 +4,25 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    """
+    Класс Settings управляет конфигурацией приложения через переменные
+    окружения. Настройки автоматически загружаются из `.env` или `.test.env`
+    в зависимости от значения переменной `MODE`.
+    """
+
     SECRET_KEY: str
     ALGORITHM: str
 
     DB_HOST: str
-    DB_PORT: str
+    DB_PORT: int
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
 
-    MODE: str
+    HOST: str
+    PORT: int
+
+    MODE: str = "DEV"
 
     @property
     def async_database_url(self):

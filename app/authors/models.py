@@ -7,6 +7,16 @@ from ..users import BaseModel
 
 
 class Author(BaseModel):
+    """
+    Модель автора.
+
+    Содержит информацию о пользователе:
+    - name: Имя автора (уникальное, обязательное).
+    - biography: Биография автора (текст, необязательное поле).
+    - birth_date: Дата рождения автора (обязательное поле).
+    - books: Список книг, написанных автором (отношение "многие ко многим").
+    """
+
     __tablename__ = "authors"
 
     name: Mapped[str] = mapped_column(unique=True, nullable=False)

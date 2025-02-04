@@ -15,7 +15,18 @@ from .services import (
 authors_router = APIRouter(prefix="/authors", tags=["Authors"])
 
 
-@authors_router.post("/", response_model=AuthorRead, status_code=201)
+@authors_router.post(
+    "/",
+    response_model=AuthorRead,
+    status_code=201,
+    summary="Создание нового автора",
+    description="Регистрирует нового автора (только для администратора).",
+    responses={
+        201: {"description": "Автор успешно создан."},
+        400: {"description": "Некорректные данные для создания автора."},
+        403: {"description": "Недостаточно прав для выполнения операции."},
+    },
+)
 async def create_author(
     author: AuthorCreate,
     db: AsyncSession = Depends(get_async_session),
@@ -24,24 +35,59 @@ async def create_author(
     return await author_create(author, db)
 
 
-@authors_router.get("/", response_model=list[AuthorRead])
+@authors_router.get(
+    "/",
+    response_model=list[AuthorRead],
+    summary="Получение списка авторов",
+    description="""
+    Получение списка всех авторов с возможностью фильтрации по имени.
+    - Можно задать `limit` (количество авторов) и `offset` (начало выборки).
+    - Можно фильтровать по имени автора.
+    """,
+    responses={
+        200: {"description": "Список авторов успешно получен."},
+        400: {"description": "Некорректные параметры запроса."},
+    },
+)
 async def get_authors(
     db: AsyncSession = Depends(get_async_session),
-    limit: int = Query(10, ge=1, le=100),
-    offset: int = Query(0, ge=0),
-    name: str | None = Query(None, min_length=3, max_length=50),
+    limit: int = Query(10, ge=1, le=100, description="Количество записей."),
+    offset: int = Query(0, ge=0, description="Смещение от начала выборки."),
+    name: str | None = Query(
+        None, min_length=3, max_length=50, description="Фильтр по имени."
+    ),
 ):
     return await get_all_authors(db, limit=limit, offset=offset, name=name)
 
 
-@authors_router.get("/{author_id}", response_model=AuthorRead)
+@authors_router.get(
+    "/{author_id}",
+    response_model=AuthorRead,
+    summary="Получение данных автора по ID",
+    description="Получение информации об авторе по ID.",
+    responses={
+        200: {"description": "Данные автора успешно получены."},
+        404: {"description": "Автор с указанным ID не найден."},
+    },
+)
 async def get_author(
     author_id: int, db: AsyncSession = Depends(get_async_session)
 ):
     return await get_author_by_id(author_id, db)
 
 
-@authors_router.put("/{author_id}", response_model=AuthorRead)
+@authors_router.put(
+    "/{author_id}",
+    response_model=AuthorRead,
+    summary="Обновление данных автора",
+    description="Обновление данных автора (только для администратора).",
+    responses={
+        200: {"description": "Данные автора успешно обновлены."},
+        400: {"description": "Некорректные данные для обновления автора."},
+        403: {"description": "Недостаточно прав для выполнения операции."},
+        404: {"description": "Автор с указанным ID не найден."},
+    },
+)
 async def update(
     author_id: int,
     author_update: AuthorUpdate,
@@ -51,7 +97,17 @@ async def update(
     return await update_author(author_id, author_update, db)
 
 
-@authors_router.delete("/{author_id}", status_code=204)
+@authors_router.delete(
+    "/{author_id}",
+    status_code=204,
+    summary="Удаление автора",
+    description="Удаление автора по ID (только для администратора).",
+    responses={
+        204: {"description": "Автор успешно удалён."},
+        403: {"description": "Недостаточно прав для выполнения операции."},
+        404: {"description": "Автор с указанным ID не найден."},
+    },
+)
 async def delete(
     author_id: int,
     db: AsyncSession = Depends(get_async_session),

@@ -1,3 +1,11 @@
+"""
+Функции для работы с паролями и токенами:
+
+- Хеширование паролей с использованием bcrypt.
+- Проверка паролей.
+- Создание токенов доступа с использованием JWT.
+"""
+
 from datetime import datetime, timedelta, timezone
 
 from jose import jwt
