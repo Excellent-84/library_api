@@ -15,9 +15,7 @@ from .enums import UserRole
 
 
 class UserBase(BaseModel):
-    """
-    Базовая схема для создания и обновления данных пользователя.
-    """
+    """Базовая схема для создания и обновления данных пользователя."""
 
     email: EmailStr = Field(
         ...,
@@ -28,9 +26,7 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    """
-    Схема для создания пользователя.
-    """
+    """Схема для создания пользователя."""
 
     username: Annotated[str, MinLen(3), MaxLen(20)] = Field(
         ...,
@@ -53,10 +49,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(BaseModel):
-    """
-    Схема для обновления данных пользователя.
-    Оба поля являются необязательными.
-    """
+    """Схема для обновления данных пользователя."""
 
     username: Optional[Annotated[str, MinLen(3), MaxLen(20)]] = Field(
         None,
@@ -73,9 +66,7 @@ class UserUpdate(BaseModel):
 
 
 class UserResponse(UserBase):
-    """
-    Схема для ответа с данными пользователя.
-    """
+    """Схема для ответа с данными пользователя."""
 
     id: int = Field(
         ...,
@@ -128,9 +119,7 @@ class UserRebookResponse(UserResponse):
 
 
 class LoginRequest(BaseModel):
-    """
-    Схема для запроса на вход пользователя.
-    """
+    """Схема для запроса на вход пользователя."""
 
     email: EmailStr = Field(
         ...,
@@ -147,9 +136,7 @@ class LoginRequest(BaseModel):
 
 
 class Token(BaseModel):
-    """
-    Схема для токена.
-    """
+    """Схема для токена."""
 
     access_token: str = Field(
         ...,
@@ -166,9 +153,7 @@ class Token(BaseModel):
 
 
 class RoleUpdate(BaseModel):
-    """
-    Схема для обновления роли пользователя.
-    """
+    """Схема для обновления роли пользователя."""
 
     new_role: str = Field(
         ...,

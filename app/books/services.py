@@ -1,3 +1,10 @@
+"""
+Вспомогательные функции для работы с книгами:
+
+- Создание, обновление и удаление книг.
+- Получение списка книг или данных о конкретной книге.
+"""
+
 from sqlalchemy import asc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -9,13 +16,18 @@ from .schemas import BookCreate
 
 
 async def create_book(book_data: BookCreate, db: AsyncSession) -> Book:
+    """
+    Создание новой книги.
+    Возвращает ответ с информацией о созданной книге.
+    Выбрасывает исключение, если авторы с указанными ID не найдены.
+    """
     authors = await db.execute(
         select(Author).filter(Author.id.in_(book_data.author_ids))
     )
     authors = authors.scalars().all()
 
     if len(authors) != len(book_data.author_ids):
-        raise BookNotFoundException
+        raise BookNotFoundException()
 
     new_book = Book(
         title=book_data.title,
@@ -33,10 +45,16 @@ async def create_book(book_data: BookCreate, db: AsyncSession) -> Book:
 
 
 async def get_book_by_id(book_id: int, db: AsyncSession) -> Book:
+    """
+    Получение книги по ID.
+    Возвращает информацию о книге.
+    Выбрасывает исключение, если книга не найдена.
+    """
+
     book = await db.scalar(select(Book).filter(Book.id == book_id))
 
     if not book:
-        raise BookNotFoundException
+        raise BookNotFoundException()
 
     return book
 
@@ -47,6 +65,11 @@ async def get_all_books(
     offset: int = 0,
     genre: str | None = None,
 ) -> list[Book]:
+    """
+    Получение списка всех книг с пагинацией и фильтрацией по жанру.
+    Возвращает список книг.
+    """
+
     query = select(Book).order_by(asc(Book.id))
     if genre:
         query = query.filter(Book.genre.ilike(f"%{genre}%"))
@@ -59,6 +82,12 @@ async def get_all_books(
 async def update_book(
     book_id: int, book_data: BookCreate, db: AsyncSession
 ) -> Book:
+    """
+    Обновляет информацию о книге.
+    Возвращает обновленную информацию книгу.
+    Выбрасывает исключение, если книга с указанным ID не найдена.
+    """
+
     book = await get_book_by_id(book_id, db)
     authors = await db.execute(
         select(Author).filter(Author.id.in_(book_data.author_ids))
@@ -79,6 +108,11 @@ async def update_book(
 
 
 async def delete_book(book_id: int, db: AsyncSession) -> None:
+    """
+    Удаление книги по ID.
+    Выбрасывает исключение, если книга с указанным ID не найдена.
+    """
+
     book = await get_book_by_id(book_id, db)
     await db.delete(book)
     await db.commit()

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_async_session
@@ -18,7 +18,7 @@ authors_router = APIRouter(prefix="/authors", tags=["Authors"])
 @authors_router.post(
     "/",
     response_model=AuthorRead,
-    status_code=201,
+    status_code=status.HTTP_201_CREATED,
     summary="Создание нового автора",
     description="Регистрирует нового автора (только для администратора).",
     responses={
@@ -40,7 +40,7 @@ async def create_author(
     response_model=list[AuthorRead],
     summary="Получение списка авторов",
     description="""
-    Получение списка всех авторов с возможностью фильтрации по имени.
+    Получение списка всех авторов.
     - Можно задать `limit` (количество авторов) и `offset` (начало выборки).
     - Можно фильтровать по имени автора.
     """,
@@ -99,7 +99,7 @@ async def update(
 
 @authors_router.delete(
     "/{author_id}",
-    status_code=204,
+    status_code=status.HTTP_204_NO_CONTENT,
     summary="Удаление автора",
     description="Удаление автора по ID (только для администратора).",
     responses={

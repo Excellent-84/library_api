@@ -15,5 +15,5 @@ __all__ = [
     "settings",
     "get_async_session",
     "integrity_error_handler",
-    "validation_exception_handler"
+    "validation_exception_handler",
 ]

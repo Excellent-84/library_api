@@ -16,3 +16,8 @@ class AvailableException(CustomException):
 class RebookNotFoundException(CustomException):
     status_code = status.HTTP_404_NOT_FOUND
     detail = "Rebook record not found"
+
+
+class RebookReturnException(CustomException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Book has already been returned"

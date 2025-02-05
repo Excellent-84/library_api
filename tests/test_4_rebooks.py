@@ -12,7 +12,7 @@ async def test_borrow_book(ac: AsyncClient):
         headers=get_headers(reader_token),
         json={"book_id": 1}
     )
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json()["user_id"] == 2
     assert response.json()["book_id"] == 1
     assert "borrowed_at" in response.json()

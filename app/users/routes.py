@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_async_session
@@ -30,7 +30,7 @@ users_router = APIRouter(prefix="/users", tags=["Users"])
 @users_router.post(
     "/register",
     response_model=UserResponse,
-    status_code=201,
+    status_code=status.HTTP_201_CREATED,
     summary="Регистрация пользователя",
     description="""
     Регистрирует нового пользователя.

@@ -13,9 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class AuthorBase(BaseModel):
-    """
-    Базовая схема автора.
-    """
+    """Базовая схема автора."""
 
     name: Annotated[str, MinLen(3), MaxLen(50)] = Field(
         ...,
@@ -38,18 +36,13 @@ class AuthorBase(BaseModel):
 
 
 class AuthorCreate(AuthorBase):
-    """
-    Схема для создания нового автора.
-    """
+    """Схема для создания нового автора."""
 
     pass
 
 
 class AuthorUpdate(BaseModel):
-    """
-    Схема для обновления данных автора.
-    Все поля являются необязательными.
-    """
+    """Схема для обновления данных автора."""
 
     name: Optional[Annotated[str, MinLen(3), MaxLen(50)]] = Field(
         None,
@@ -74,9 +67,7 @@ class AuthorUpdate(BaseModel):
 
 
 class AuthorRead(AuthorBase):
-    """
-    Схема для ответа с данными автора.
-    """
+    """Схема для ответа с данными автора."""
 
     id: int = Field(
         ...,

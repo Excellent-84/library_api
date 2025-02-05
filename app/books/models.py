@@ -14,14 +14,27 @@ book_author = Table(
 
 
 class Book(BaseModel):
+    """Модель книги."""
+
     __tablename__ = "books"
 
-    title: Mapped[str] = mapped_column(String(100), nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=True)
-    publication_date: Mapped[date] = mapped_column(Date, nullable=False)
-    genre: Mapped[str] = mapped_column(String(50), nullable=False)
+    title: Mapped[str] = mapped_column(
+        String(100), nullable=False, doc="Название книги"
+    )
+    description: Mapped[str] = mapped_column(
+        Text, nullable=True, doc="Описание книги"
+    )
+    publication_date: Mapped[date] = mapped_column(
+        Date, nullable=False, doc="Дата публикации книги"
+    )
+    genre: Mapped[str] = mapped_column(
+        String(50), nullable=False, doc="Жанр книги"
+    )
     available_copies: Mapped[int] = mapped_column(
-        Integer, default=1, nullable=False
+        Integer,
+        default=1,
+        nullable=False,
+        doc="Количество доступных экземпляров книги",
     )
 
     authors = relationship(
@@ -29,4 +42,5 @@ class Book(BaseModel):
         secondary=book_author,
         back_populates="books",
         lazy="selectin",
+        doc="Связь с авторами книги через промежуточную таблицу book_author",
     )
