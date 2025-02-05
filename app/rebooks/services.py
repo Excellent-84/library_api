@@ -72,6 +72,7 @@ async def return_book(db: AsyncSession, user_id: int, book_id: int) -> Rebook:
     Возвращает информацию о выданной книге.
     Выбрасывает исключение, если книга не была выдана пользователю.
     """
+
     rebook = await db.scalar(
         select(Rebook).filter(
             Rebook.user_id == user_id,
@@ -81,9 +82,6 @@ async def return_book(db: AsyncSession, user_id: int, book_id: int) -> Rebook:
     )
 
     if not rebook:
-        raise RebookNotFoundException()
-
-    if rebook.returned_at is not None:
         raise RebookNotFoundException()
 
     rebook.returned_at = func.now()
@@ -107,6 +105,7 @@ async def get_all_rebooks(
     Получение списка всех выданных книг с возможностью фильтрации и пагинации.
     Возвращает список выданных книг.
     """
+
     query = select(Rebook).order_by(asc(Rebook.id))
     if user_id:
         query = query.filter(Rebook.user_id == user_id)

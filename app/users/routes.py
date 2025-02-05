@@ -28,7 +28,7 @@ users_router = APIRouter(prefix="/users", tags=["Users"])
 
 
 @users_router.post(
-    "/register",
+    "/register/",
     response_model=UserResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Регистрация пользователя",
@@ -51,7 +51,7 @@ async def register(
 
 
 @users_router.post(
-    "/login",
+    "/login/",
     response_model=Token,
     summary="Вход в систему",
     description="""
@@ -89,7 +89,7 @@ async def list_users(
 
 
 @users_router.get(
-    "/me",
+    "/me/",
     response_model=UserRebookResponse,
     summary="Информация о текущем пользователе",
     description="""
@@ -109,7 +109,7 @@ async def get_me(
 
 
 @users_router.put(
-    "/me",
+    "/me/",
     response_model=UserResponse,
     summary="Обновление данных текущего пользователя",
     description="""
@@ -131,7 +131,7 @@ async def update_me(
 
 
 @users_router.get(
-    "/{user_id}",
+    "/{user_id}/",
     response_model=UserRebookResponse,
     summary="Получение данных пользователя по ID",
     description="""
@@ -153,7 +153,7 @@ async def get_user(
 
 
 @users_router.put(
-    "/{user_id}/role",
+    "/{user_id}/role/",
     response_model=dict,
     summary="Обновление роли пользователя",
     description="""

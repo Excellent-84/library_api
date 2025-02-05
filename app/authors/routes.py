@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_async_session
-from ..users import UserRole, require_role
+from ..users import UserRole, get_current_user, require_role
 from .schemas import AuthorCreate, AuthorRead, AuthorUpdate
 from .services import (
     author_create,
@@ -56,12 +56,13 @@ async def get_authors(
     name: str | None = Query(
         None, min_length=3, max_length=50, description="Фильтр по имени."
     ),
+    current_user=Depends(get_current_user),
 ):
     return await get_all_authors(db, limit=limit, offset=offset, name=name)
 
 
 @authors_router.get(
-    "/{author_id}",
+    "/{author_id}/",
     response_model=AuthorRead,
     summary="Получение данных автора по ID",
     description="Получение информации об авторе по ID.",
@@ -71,13 +72,15 @@ async def get_authors(
     },
 )
 async def get_author(
-    author_id: int, db: AsyncSession = Depends(get_async_session)
+    author_id: int,
+    db: AsyncSession = Depends(get_async_session),
+    current_user=Depends(get_current_user),
 ):
     return await get_author_by_id(author_id, db)
 
 
 @authors_router.put(
-    "/{author_id}",
+    "/{author_id}/",
     response_model=AuthorRead,
     summary="Обновление данных автора",
     description="Обновление данных автора (только для администратора).",
@@ -98,7 +101,7 @@ async def update(
 
 
 @authors_router.delete(
-    "/{author_id}",
+    "/{author_id}/",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Удаление автора",
     description="Удаление автора по ID (только для администратора).",

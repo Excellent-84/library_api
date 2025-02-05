@@ -15,8 +15,8 @@ async def test_create_book(ac: AsyncClient):
             "publication_date": "1833-01-01",
             "genre": "Поэзия",
             "available_copies": 5,
-            "author_ids": [1]
-        }
+            "author_ids": [1],
+        },
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "Permission denied"
@@ -29,8 +29,8 @@ async def test_create_book(ac: AsyncClient):
             "publication_date": "1833-05-26",
             "genre": "Драма",
             "available_copies": 5,
-            "author_ids": [1, 2]
-        }
+            "author_ids": [1, 2],
+        },
     )
     assert response.status_code == 201
 
@@ -42,8 +42,8 @@ async def test_create_book(ac: AsyncClient):
             "publication_date": "1831-03-01",
             "genre": "Поэзия",
             "available_copies": 5,
-            "author_ids": [1]
-        }
+            "author_ids": [1],
+        },
     )
     assert response.status_code == 201
 
@@ -65,10 +65,10 @@ async def test_get_book(ac: AsyncClient):
     admin_token = await get_admin_token(ac)
     reader_token = await get_reader_token(ac)
 
-    response = await ac.get("/books/1", headers=get_headers(admin_token))
+    response = await ac.get("/books/1/", headers=get_headers(admin_token))
     assert response.status_code == 200
 
-    response = await ac.get("/books/1", headers=get_headers(reader_token))
+    response = await ac.get("/books/1/", headers=get_headers(reader_token))
     assert response.status_code == 200
 
 
@@ -77,7 +77,7 @@ async def test_update_book(ac: AsyncClient):
     reader_token = await get_reader_token(ac)
 
     response = await ac.put(
-        "/books/1",
+        "/books/1/",
         headers=get_headers(reader_token),
         json={
             "title": "Евгений Онегин",
@@ -85,14 +85,14 @@ async def test_update_book(ac: AsyncClient):
             "publication_date": "1833-01-01",
             "genre": "Поэзия",
             "available_copies": 1,
-            "author_ids": [1]
-        }
+            "author_ids": [1],
+        },
     )
     assert response.status_code == 403
     assert response.json()["detail"] == "Permission denied"
 
     response = await ac.put(
-        "/books/1",
+        "/books/1/",
         headers=get_headers(admin_token),
         json={
             "title": "Евгений Онегин",
@@ -100,8 +100,8 @@ async def test_update_book(ac: AsyncClient):
             "publication_date": "1833-01-01",
             "genre": "Поэзия",
             "available_copies": 1,
-            "author_ids": [1]
-        }
+            "author_ids": [1],
+        },
     )
     assert response.status_code == 200
     assert response.json()["title"] == "Евгений Онегин"
@@ -116,9 +116,9 @@ async def test_delete_book(ac: AsyncClient):
     admin_token = await get_admin_token(ac)
     reader_token = await get_reader_token(ac)
 
-    response = await ac.delete("/books/2", headers=get_headers(reader_token))
+    response = await ac.delete("/books/2/", headers=get_headers(reader_token))
     assert response.status_code == 403
     assert response.json()["detail"] == "Permission denied"
 
-    response = await ac.delete("/books/2", headers=get_headers(admin_token))
+    response = await ac.delete("/books/2/", headers=get_headers(admin_token))
     assert response.status_code == 204

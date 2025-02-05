@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_async_session
-from ..users import UserRole, require_role
+from ..users import UserRole, get_current_user, require_role
 from .schemas import BookCreate, BookResponse
 from .services import (
     create_book,
@@ -56,12 +56,13 @@ async def get_books(
         None, max_length=50, description="Фильтр по жанру."
     ),
     db: AsyncSession = Depends(get_async_session),
+    current_user=Depends(get_current_user),
 ):
     return await get_all_books(db=db, limit=limit, offset=offset, genre=genre)
 
 
 @books_router.get(
-    "/{book_id}",
+    "/{book_id}/",
     response_model=BookResponse,
     summary="Получение книги по ID",
     description="Получение данных о книге по ее ID",
@@ -71,13 +72,15 @@ async def get_books(
     },
 )
 async def get_book(
-    book_id: int, db: AsyncSession = Depends(get_async_session)
+    book_id: int,
+    db: AsyncSession = Depends(get_async_session),
+    current_user=Depends(get_current_user),
 ):
     return await get_book_by_id(book_id, db)
 
 
 @books_router.put(
-    "/{book_id}",
+    "/{book_id}/",
     response_model=BookResponse,
     summary="Обновление данных о книге",
     description="Обновление информации о книге (только для администратора).",
@@ -98,7 +101,7 @@ async def update(
 
 
 @books_router.delete(
-    "/{book_id}",
+    "/{book_id}/",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Удаление книги",
     description="Удаляет книгу по ID (только для администратора)",

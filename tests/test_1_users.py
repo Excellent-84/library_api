@@ -5,7 +5,7 @@ async def register_user(
     ac: AsyncClient, email: str, password: str, username: str
 ):
     response = await ac.post(
-        "/users/register",
+        "/users/register/",
         json={"email": email, "password": password, "username": username},
     )
     assert response.status_code == 201
@@ -13,7 +13,7 @@ async def register_user(
 
 async def login_user(ac: AsyncClient, email: str, password: str) -> str:
     response = await ac.post(
-        "/users/login",
+        "/users/login/",
         json={"email": email, "password": password},
     )
     assert response.status_code == 200
@@ -65,23 +65,23 @@ async def test_get_user(ac: AsyncClient):
     admin_token = await get_admin_token(ac)
     reader_token = await get_reader_token(ac)
 
-    response = await ac.get("/users/2", headers=get_headers(admin_token))
+    response = await ac.get("/users/2/", headers=get_headers(admin_token))
     assert response.status_code == 200
 
-    response = await ac.get("/users/2", headers=get_headers(reader_token))
+    response = await ac.get("/users/2/", headers=get_headers(reader_token))
     assert response.status_code == 403
     assert response.json()["detail"] == "Permission denied"
 
 
 async def test_get_me(ac: AsyncClient):
     admin_token = await get_admin_token(ac)
-    response = await ac.get("/users/me", headers=get_headers(admin_token))
+    response = await ac.get("/users/me/", headers=get_headers(admin_token))
     assert response.status_code == 200
     assert response.json()["email"] == "admin@example.com"
     assert response.json()["role"] == "admin"
 
     reader_token = await get_reader_token(ac)
-    response = await ac.get("/users/me", headers=get_headers(reader_token))
+    response = await ac.get("/users/me/", headers=get_headers(reader_token))
     assert response.status_code == 200
     assert response.json()["email"] == "reader@example.com"
     assert response.json()["role"] == "reader"
@@ -92,18 +92,18 @@ async def test_update_me(ac: AsyncClient):
     headers = get_headers(reader_token)
 
     response = await ac.put(
-        "/users/me", headers=headers, json={"username": "updateduser"}
+        "/users/me/", headers=headers, json={"username": "updateduser"}
     )
     assert response.status_code == 200
     assert response.json()["username"] == "updateduser"
 
     response = await ac.put(
-        "/users/me", headers=headers, json={"password": "newpassword"}
+        "/users/me/", headers=headers, json={"password": "newpassword"}
     )
     assert response.status_code == 200
 
     response = await ac.put(
-        "/users/me",
+        "/users/me/",
         headers=headers,
         json={"password": "readerpassword", "username": "readeruser"},
     )
@@ -115,20 +115,20 @@ async def test_update_role(ac: AsyncClient):
     headers = get_headers(admin_token)
 
     response = await ac.put(
-        "/users/2/role", headers=headers, json={"new_role": "admin"}
+        "/users/2/role/", headers=headers, json={"new_role": "admin"}
     )
     assert response.status_code == 200
     assert response.json()["message"] == "Role updated to admin"
 
     response = await ac.put(
-        "/users/2/role", headers=headers, json={"new_role": "reader"}
+        "/users/2/role/", headers=headers, json={"new_role": "reader"}
     )
     assert response.status_code == 200
     assert response.json()["message"] == "Role updated to reader"
 
     reader_token = await get_reader_token(ac)
     response = await ac.put(
-        "/users/2/role",
+        "/users/2/role/",
         headers=get_headers(reader_token),
         json={"new_role": "admin"},
     )

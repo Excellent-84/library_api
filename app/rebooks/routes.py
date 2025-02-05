@@ -36,7 +36,7 @@ async def borrow(
 
 
 @rebooks_router.post(
-    "/return",
+    "/return/",
     response_model=RebookResponse,
     summary="Возврат книги",
     description="Пользователь может вернуть книгу.",
@@ -81,7 +81,7 @@ async def get_rebooks(
 
 
 @rebooks_router.get(
-    "/{rebook_id}",
+    "/{rebook_id}/",
     response_model=RebookResponse,
     summary="Получение выдачи книги по ID",
     description="""
