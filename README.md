@@ -44,48 +44,48 @@ RESTful API для управления библиотечным каталог�
 ##### Клонировать репозиторий и перейти в него в командной строке:
 
 ```bash
-git clone https://github.com/Excellent-84/library_api.git
-cd library_api
+$ git clone https://github.com/Excellent-84/library_api.git
+$ cd library_api
 ```
 
 ##### Cоздать и активировать виртуальное окружение:
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-python3 -m pip install --upgrade pip
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ python3 -m pip install --upgrade pip
 ```
 
 ##### Установить зависимости из файла requirements.txt:
 
 ```bash
-pip install -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 ##### Создать файл .env и указать необходимые токены по примеру .env.example:
 
 ```bash
-touch .env
+$ touch .env
 ```
 
 ##### Создать базу данных в PostgreSQL через pgAdmin или командную строку:
 
 ```bash
-psql -U <DB_USER>
-CREATE DATABASE <DB_NAME>;
+$ psql -U <DB_USER>
+$ CREATE DATABASE <DB_NAME>;
 ```
 
 ##### При необходимости выполнить и применить миграции:
 
 ```bash
-alembic revision --autogenerate -m "<ваш комментарий>"
-alembic upgrade head
+$ alembic revision --autogenerate -m "<ваш комментарий>"
+$ alembic upgrade head
 ```
 
 ##### Запустить проект:
 
 ```bash
-python main.py
+$ python main.py
 ```
 
 ##### Тестирование. Перед запуском тестирования нужно создать тестовую базу данных
@@ -93,7 +93,7 @@ python main.py
 ##### тестовые данные, отличные от файла .env:
 
 ```bash
-pytest
+$ pytest
 ```
 
 ### Примеры запросов к API с помощью Postman:
