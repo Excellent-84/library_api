@@ -1,9 +1,15 @@
 ## API для Управления Библиотекой
 
-### Описание проекта:
+<br>
 
+<img src="https://img.shields.io/badge/Python-FFFFFF?style=for-the-badge&logo=python&logoColor=3776AB"/><img src="https://img.shields.io/badge/FastAPI-FFFFFF?style=for-the-badge&logo=fastapi&logoColor=009688"/><img src="https://img.shields.io/badge/sqlalchemy-FFFFFF?style=for-the-badge&logo=sqlalchemy&logoColor=D71F00"/><img src="https://img.shields.io/badge/pydantic-FFFFFF?style=for-the-badge&logo=pydantic&logoColor=E92063"/><img src="https://img.shields.io/badge/alembic-FFFFFF?style=for-the-badge&logo=alembic&logoColor=8212"/><img src="https://img.shields.io/badge/PostgreSQL-FFFFFF?style=for-the-badge&logo=PostgreSQL&logoColor=4169E1"/><img src="https://img.shields.io/badge/JWT-FFFFFF?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=black"/><img src="https://img.shields.io/badge/pytest-FFFFFF?style=for-the-badge&logo=pytest&logoColor=0A9EDC"/>
+
+<br>
+
+<strong>Описание проекта:</strong>
+<br><br>
 RESTful API для управления библиотечным каталогом. Система позволяет управлять информацией о книгах, авторах, читателях и выдачей книг.
-
+<br>
  - Регистрация и Аутентификация пользователей с использованием JWT токенов по email. Пользователи разделены на роли: администратор и читатель. Первому зарегистрированному пользователю присваивается роль администратора, всем последующим - читатель. Администратор может изменять роли пользователей. Администратор может управлять всеми ресурсами, читатель — только просмотр и взаимодействие с книгами.
 
  - Управление книгами. CRUD операции для книг. Каждая книга имеет следующие поля:
@@ -35,11 +41,9 @@ RESTful API для управления библиотечным каталог�
    - Документация ReDoc, Swagger
 
 
-### Стек технологий:
-<img src="https://img.shields.io/badge/Python-FFFFFF?style=for-the-badge&logo=python&logoColor=3776AB"/><img src="https://img.shields.io/badge/FastAPI-FFFFFF?style=for-the-badge&logo=fastapi&logoColor=009688"/><img src="https://img.shields.io/badge/pydantic-FFFFFF?style=for-the-badge&logo=pydantic&logoColor=E92063"/><img src="https://img.shields.io/badge/PostgreSQL-FFFFFF?style=for-the-badge&logo=PostgreSQL&logoColor=4169E1"/><img src="https://img.shields.io/badge/sqlalchemy-FFFFFF?style=for-the-badge&logo=sqlalchemy&logoColor=D71F00"/><img src="https://img.shields.io/badge/alembic-FFFFFF?style=for-the-badge&logo=alembic&logoColor=8212"/><img src="https://img.shields.io/badge/JWT-FFFFFF?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=black"/><img src="https://img.shields.io/badge/pytest-FFFFFF?style=for-the-badge&logo=pytest&logoColor=0A9EDC"/>
 
-
-### Как запустить проект:
+<details>
+<summary><strong>Как запустить проект</strong></summary>
 
 ##### Клонировать репозиторий и перейти в него в командной строке:
 
@@ -96,7 +100,10 @@ $ python main.py
 $ pytest
 ```
 
-### Примеры запросов к API с помощью Postman:
+</details>
+
+<details>
+<summary><strong>Примеры запросов к API с помощью Postman</strong></summary>
 
 ##### Регистрация пользователя в базе данных:
 
@@ -254,9 +261,14 @@ $ pytest
 }
 ```
 
-##### Подробную версию запросов можно посмотреть по адресу:
+</details>
+
+<br>
+
+<strong>Подробную версию запросов можно посмотреть по адресу:</strong>
 - Swagger: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 - ReDoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
+<br>
 
-#### Автор: [Горин Евгений](https://github.com/Excellent-84)
+<strong>Автор: [Горин Евгений](https://github.com/Excellent-84)</strong>
