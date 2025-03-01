@@ -2,7 +2,16 @@
 
 <br>
 
-<img src="https://img.shields.io/badge/Python-FFFFFF?style=for-the-badge&logo=python&logoColor=3776AB"/><img src="https://img.shields.io/badge/FastAPI-FFFFFF?style=for-the-badge&logo=fastapi&logoColor=009688"/><img src="https://img.shields.io/badge/sqlalchemy-FFFFFF?style=for-the-badge&logo=sqlalchemy&logoColor=D71F00"/><img src="https://img.shields.io/badge/pydantic-FFFFFF?style=for-the-badge&logo=pydantic&logoColor=E92063"/><img src="https://img.shields.io/badge/alembic-FFFFFF?style=for-the-badge&logo=alembic&logoColor=8212"/><img src="https://img.shields.io/badge/PostgreSQL-FFFFFF?style=for-the-badge&logo=PostgreSQL&logoColor=4169E1"/><img src="https://img.shields.io/badge/JWT-FFFFFF?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=black"/><img src="https://img.shields.io/badge/pytest-FFFFFF?style=for-the-badge&logo=pytest&logoColor=0A9EDC"/>
+<div style="display: flex; flex-wrap: wrap;">
+  <img src="https://www.python.org/static/community_logos/python-logo.png" alt="Python" width="75"/>
+  <img src="https://img.shields.io/badge/sqlalchemy-FFFFFF?style=for-the-badge&logo=sqlalchemy&logoColor=D71F00"/>
+  <img src="https://img.shields.io/badge/pydantic-FFFFFF?style=for-the-badge&logo=pydantic&logoColor=E92063"/>
+  <img src="https://img.shields.io/badge/alembic-FFFFFF?style=for-the-badge&logo=alembic&logoColor=8212"/>
+  <img src="https://img.shields.io/badge/PostgreSQL-FFFFFF?style=for-the-badge&logo=PostgreSQL&logoColor=4169E1"/>
+  <img src="https://img.shields.io/badge/JWT-FFFFFF?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=black"/>
+  <img src="https://img.shields.io/badge/pytest-FFFFFF?style=for-the-badge&logo=pytest&logoColor=0A9EDC"/>
+  <img src="https://img.shields.io/badge/Docker-FFFFFF?style=for-the-badge&logo=Docker&logoColor=2496ED"/>
+</div>
 
 <br>
 
@@ -11,22 +20,12 @@
 <br><br>
 RESTful API для управления библиотечным каталогом. Система позволяет управлять информацией о книгах, авторах, читателях и выдачей книг.
 <br>
+
  - Регистрация и Аутентификация пользователей с использованием JWT токенов по email. Пользователи разделены на роли: администратор и читатель. Первому зарегистрированному пользователю присваивается роль администратора, всем последующим - читатель. Администратор может изменять роли пользователей. Администратор может управлять всеми ресурсами, читатель — только просмотр и взаимодействие с книгами.
 
- - Управление книгами. CRUD операции для книг. Каждая книга имеет следующие поля:
-     - ID
-     - Название
-     - Описание
-     - Дата публикации
-     - Автор(ы) (связь с таблицей авторов)
-     - Жанр(ы)
-     - Количество доступных экземпляров
+ - Управление книгами. CRUD операции для книг.
 
- - Управление авторами. CRUD операции для авторов. Поля автора:
-     - ID
-     - Имя
-     - Биография
-     - Дата рождения
+ - Управление авторами. CRUD операции для авторов.
 
  - Управление читателями. Администратор может просматривать список читателей. Читатели могут обновлять свою информацию.
 
@@ -39,7 +38,8 @@ RESTful API для управления библиотечным каталог�
    - Логирование основных событий.
    - Alembic для управления миграциями базы данных.
    - Юнит-тесты для основных эндпоинтов.
-   - Документация ReDoc, Swagger
+   - Документация ReDoc, Swagger.
+   - Развертывание проекта с помощью Docker.
 
 </details>
 
@@ -53,52 +53,34 @@ $ git clone https://github.com/Excellent-84/library_api.git
 $ cd library_api
 ```
 
-##### Cоздать и активировать виртуальное окружение:
-
-```bash
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ python3 -m pip install --upgrade pip
-```
-
-##### Установить зависимости из файла requirements.txt:
-
-```bash
-$ pip install -r requirements.txt
-```
-
 ##### Создать файл .env и указать необходимые токены по примеру .env.example:
 
 ```bash
 $ touch .env
 ```
 
-##### Создать базу данных в PostgreSQL через pgAdmin или командную строку:
+##### Собрать и запустить контейнеры с помощью Docker Compose:
 
 ```bash
-$ psql -U <DB_USER>
-$ CREATE DATABASE <DB_NAME>;
+$ docker compose up -d
 ```
 
-##### При необходимости выполнить и применить миграции:
+##### При необходимости проверить логи запущенного контейнера:
 
 ```bash
-$ alembic revision --autogenerate -m "<ваш комментарий>"
-$ alembic upgrade head
+$ docker logs -f library_api
 ```
 
-##### Запустить проект:
+##### Проект будет доступен по адресу:
 
 ```bash
-$ python main.py
+http://localhost:8000
 ```
 
-##### Тестирование. Перед запуском тестирования нужно создать тестовую базу данных
-##### в PostgreSQL, например test_db, в файле .test.env  необходимо указать
-##### тестовые данные, отличные от файла .env:
+##### Тестирование. Запуск тестов pytest внутри контейнера:
 
 ```bash
-$ pytest
+$ docker exec -it library_api pytest
 ```
 
 </details>
