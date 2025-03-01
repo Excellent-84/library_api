@@ -3,7 +3,7 @@
 <br>
 
 <div style="display: flex; flex-wrap: wrap;">
-  <img src="https://www.python.org/static/community_logos/python-logo.png" alt="Python" width="75"/>
+  <img src="https://www.python.org/static/community_logos/python-logo.png" alt="Python" width="84"/>
   <img src="https://img.shields.io/badge/sqlalchemy-FFFFFF?style=for-the-badge&logo=sqlalchemy&logoColor=D71F00"/>
   <img src="https://img.shields.io/badge/pydantic-FFFFFF?style=for-the-badge&logo=pydantic&logoColor=E92063"/>
   <img src="https://img.shields.io/badge/alembic-FFFFFF?style=for-the-badge&logo=alembic&logoColor=8212"/>
