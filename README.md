@@ -59,7 +59,7 @@ $ cd library_api
 $ touch .env
 ```
 
-##### Собрать и запустить контейнеры с помощью Docker Compose:
+##### Собрать и запустить контейнеры с помощью Docker:
 
 ```bash
 $ docker compose up -d
@@ -68,7 +68,7 @@ $ docker compose up -d
 ##### При необходимости проверить логи запущенного контейнера:
 
 ```bash
-$ docker logs -f library_api
+$ docker logs library_api
 ```
 
 ##### Проект будет доступен по адресу:
@@ -90,7 +90,7 @@ $ docker exec -it library_api pytest
 
 ##### Регистрация пользователя в базе данных:
 
-Метод POST к эндпоинту   http://127.0.0.1:8000/users/register/
+Метод POST к эндпоинту   http://localhost:8000/users/register/
 
 Во вкладке Body выбрать raw. Указать данные в формате json.
 Пример запроса:
@@ -117,7 +117,7 @@ $ docker exec -it library_api pytest
 
 ##### Аутентификация пользователя:
 
-Метод POST к эндпоинту   http://127.0.0.1:8000/users/login/
+Метод POST к эндпоинту   http://localhost:8000/users/login/
 
 Во вкладке Body выбрать raw. Указать данные в формате json.
 Срок действия токена 30 минут, после чего необходимо пройти повторную аутентификацию.
@@ -141,7 +141,7 @@ $ docker exec -it library_api pytest
 
 ##### Получение списка доступных книг:
 
-Метод GET к эндпоинту   http://127.0.0.1:8000/books/
+Метод GET к эндпоинту   http://localhost:8000/books/
 
 Во вкладке Auth в поле Type выбрать Bearer Token.
 В поле Token скопировать значение access_token, полученного при аутентификации.
@@ -167,7 +167,7 @@ $ docker exec -it library_api pytest
 
 ##### Получение книги по ID:
 
-Метод GET к эндпоинту   http://127.0.0.1:8000/books/{book_id}/
+Метод GET к эндпоинту   http://localhost:8000/books/{book_id}/
 
 Во вкладке Auth в поле Type выбрать Bearer Token.
 В поле Token скопировать значение access_token, полученного при аутентификации.
@@ -190,7 +190,7 @@ $ docker exec -it library_api pytest
 
 ##### Выдача книги:
 
-Метод POST к эндпоинту   http://127.0.0.1:8000/rebooks/
+Метод POST к эндпоинту   http://localhost:8000/rebooks/
 
 Во вкладке Auth в поле Type выбрать Bearer Token.
 В поле Token скопировать значение access_token, полученного при аутентификации.
@@ -218,7 +218,7 @@ $ docker exec -it library_api pytest
 
 ##### Возврат книги:
 
-Метод POST к эндпоинту   http://127.0.0.1:8000/rebooks/return/
+Метод POST к эндпоинту   http://localhost:8000/rebooks/return/
 
 Во вкладке Auth в поле Type выбрать Bearer Token.
 В поле Token скопировать значение access_token, полученного при аутентификации.
@@ -247,8 +247,8 @@ $ docker exec -it library_api pytest
 <br>
 
 <strong>Подробную версию запросов можно посмотреть по адресу:</strong>
-- Swagger: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- ReDoc: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+- Swagger: [http://localhost:8000/docs](http://localhost:8000/docs)
+- ReDoc: [http://localhost:8000/redoc](http://localhost:8000/redoc)
 
 </details>
 
